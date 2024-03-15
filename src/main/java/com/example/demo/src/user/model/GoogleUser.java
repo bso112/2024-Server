@@ -1,5 +1,6 @@
 package com.example.demo.src.user.model;
 
+import com.example.demo.common.Constant;
 import com.example.demo.src.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class GoogleUser {
                 .password("NONE")
                 .name(this.name)
                 .isOAuth(true)
+                .socialLoginType(Constant.SocialLoginType.GOOGLE)
                 .build();
     }
 }
