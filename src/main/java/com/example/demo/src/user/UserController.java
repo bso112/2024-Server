@@ -35,6 +35,7 @@ public class UserController {
     /**
      * 회원가입 API
      * [POST] /app/users
+     *
      * @return BaseResponse<PostUserRes>
      */
     // Body
@@ -42,13 +43,22 @@ public class UserController {
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-        if(postUserReq.getEmail() == null){
+        if (postUserReq.getEmail() == null) {
             return new BaseResponse<>(USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현
-        if(!isRegexEmail(postUserReq.getEmail())){
+        if (!isRegexEmail(postUserReq.getEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+
+        if (postUserReq.getName().isEmpty() || postUserReq.getName().length() > 20) {
+            return new BaseResponse<>(POST_USERS_INVALID_LENGTH_EMAIL);
+        }
+
+        if(postUserReq.getPassword().length() < 6 || postUserReq.getPassword().length() > 20){
+            return new BaseResponse<>(POST_USERS_INVALID_LENGTH_PASSWORD);
+        }
+
         PostUserRes postUserRes = userService.createUser(postUserReq);
         return new BaseResponse<>(postUserRes);
     }
@@ -58,13 +68,14 @@ public class UserController {
      * [GET] /users
      * 회원 번호 및 이메일 검색 조회 API
      * [GET] /app/users? Email=
-     * @return BaseResponse<List<GetUserRes>>
+     *
+     * @return BaseResponse<List < GetUserRes>>
      */
     //Query String
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
     public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
-        if(Email == null){
+        if (Email == null) {
             List<GetUserRes> getUsersRes = userService.getUsers();
             return new BaseResponse<>(getUsersRes);
         }
@@ -76,6 +87,7 @@ public class UserController {
     /**
      * 회원 1명 조회 API
      * [GET] /app/users/:userId
+     *
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
@@ -87,15 +99,15 @@ public class UserController {
     }
 
 
-
     /**
      * 유저정보변경 API
      * [PATCH] /app/users/:userId
+     *
      * @return BaseResponse<String>
      */
     @ResponseBody
     @PatchMapping("/{userId}")
-    public BaseResponse<String> modifyUserName(@PathVariable("userId") Long userId, @RequestBody PatchUserReq patchUserReq){
+    public BaseResponse<String> modifyUserName(@PathVariable("userId") Long userId, @RequestBody PatchUserReq patchUserReq) {
 
         Long jwtUserId = jwtService.getUserId();
 
@@ -109,11 +121,12 @@ public class UserController {
     /**
      * 유저정보삭제 API
      * [DELETE] /app/users/:userId
+     *
      * @return BaseResponse<String>
      */
     @ResponseBody
     @DeleteMapping("/{userId}")
-    public BaseResponse<String> deleteUser(@PathVariable("userId") Long userId){
+    public BaseResponse<String> deleteUser(@PathVariable("userId") Long userId) {
         Long jwtUserId = jwtService.getUserId();
 
         userService.deleteUser(userId);
@@ -125,13 +138,28 @@ public class UserController {
     /**
      * 로그인 API
      * [POST] /app/users/logIn
+     *
      * @return BaseResponse<PostLoginRes>
      */
     @ResponseBody
     @PostMapping("/logIn")
-    public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
-        // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
-        // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
+    public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq) {
+        if (postLoginReq.getEmail() == null) {
+            return new BaseResponse<>(USERS_EMPTY_EMAIL);
+        }
+        //이메일 정규표현
+        if (!isRegexEmail(postLoginReq.getEmail())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+
+        if (postLoginReq.getEmail().isEmpty() || postLoginReq.getEmail().length() > 20) {
+            return new BaseResponse<>(POST_USERS_INVALID_LENGTH_EMAIL);
+        }
+
+        if(postLoginReq.getPassword().length() < 6 || postLoginReq.getPassword().length() > 20){
+            return new BaseResponse<>(POST_USERS_INVALID_LENGTH_PASSWORD);
+        }
+
         PostLoginRes postLoginRes = userService.logIn(postLoginReq);
         return new BaseResponse<>(postLoginRes);
     }
@@ -140,29 +168,31 @@ public class UserController {
     /**
      * 유저 소셜 가입, 로그인 인증으로 리다이렉트 해주는 url
      * [GET] /app/users/auth/:socialLoginType/login
+     *
      * @return void
      */
     @GetMapping("/auth/{socialLoginType}/login")
-    public void socialLoginRedirect(@PathVariable(name="socialLoginType") String SocialLoginPath) throws IOException {
-        SocialLoginType socialLoginType= SocialLoginType.valueOf(SocialLoginPath.toUpperCase());
+    public void socialLoginRedirect(@PathVariable(name = "socialLoginType") String SocialLoginPath) throws IOException {
+        SocialLoginType socialLoginType = SocialLoginType.valueOf(SocialLoginPath.toUpperCase());
         oAuthService.accessRequest(socialLoginType);
     }
 
 
     /**
      * Social Login API Server 요청에 의한 callback 을 처리
+     *
      * @param socialLoginPath (GOOGLE, FACEBOOK, NAVER, KAKAO)
-     * @param code API Server 로부터 넘어오는 code
+     * @param code            API Server 로부터 넘어오는 code
      * @return SNS Login 요청 결과로 받은 Json 형태의 java 객체 (access_token, jwt_token, user_num 등)
      */
     @ResponseBody
     @GetMapping(value = "/auth/{socialLoginType}/login/callback")
     public BaseResponse<GetSocialOAuthRes> socialLoginCallback(
             @PathVariable(name = "socialLoginType") String socialLoginPath,
-            @RequestParam(name = "code") String code) throws IOException, BaseException{
+            @RequestParam(name = "code") String code) throws IOException, BaseException {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code : {}", code);
         SocialLoginType socialLoginType = SocialLoginType.valueOf(socialLoginPath.toUpperCase());
-        GetSocialOAuthRes getSocialOAuthRes = oAuthService.oAuthLoginOrJoin(socialLoginType,code);
+        GetSocialOAuthRes getSocialOAuthRes = oAuthService.oAuthLoginOrJoin(socialLoginType, code);
         return new BaseResponse<>(getSocialOAuthRes);
     }
 

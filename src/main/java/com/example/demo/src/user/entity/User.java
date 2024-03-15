@@ -1,5 +1,6 @@
 package com.example.demo.src.user.entity;
 
+import com.example.demo.common.Constant;
 import com.example.demo.common.entity.BaseEntity;
 import lombok.*;
 
@@ -29,13 +30,23 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean isOAuth;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserState userState = UserState.Normal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private Constant.SocialLoginType socialLoginType;
+
+
     @Builder
-    public User(Long id, String email, String password, String name, boolean isOAuth) {
+    public User(Long id, String email, String password, String name, boolean isOAuth, Constant.SocialLoginType socialLoginType) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.isOAuth = isOAuth;
+        this.socialLoginType = socialLoginType;
     }
 
     public void updateName(String name) {
@@ -44,6 +55,10 @@ public class User extends BaseEntity {
 
     public void deleteUser() {
         this.state = State.INACTIVE;
+    }
+
+    public enum UserState {
+        Normal, Dormancy, Blocked
     }
 
 }

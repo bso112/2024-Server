@@ -25,11 +25,12 @@ public class OAuthService {
 
     public void accessRequest(Constant.SocialLoginType socialLoginType) throws IOException {
         String redirectURL;
-        switch (socialLoginType){ //각 소셜 로그인을 요청하면 소셜로그인 페이지로 리다이렉트 해주는 프로세스이다.
-            case GOOGLE:{
-                redirectURL= googleOauth.getOauthRedirectURL();
-            }break;
-            default:{
+        switch (socialLoginType) { //각 소셜 로그인을 요청하면 소셜로그인 페이지로 리다이렉트 해주는 프로세스이다.
+            case GOOGLE: {
+                redirectURL = googleOauth.getOauthRedirectURL();
+            }
+            break;
+            default: {
                 throw new BaseException(INVALID_OAUTH_TYPE);
             }
 
@@ -54,7 +55,7 @@ public class OAuthService {
                 GoogleUser googleUser = googleOauth.getUserInfo(userInfoResponse);
 
                 //우리 서버의 db와 대조하여 해당 user가 존재하는 지 확인한다.
-                if(userService.checkUserByEmail(googleUser.getEmail())) { // user가 DB에 있다면, 로그인 진행
+                if (userService.checkUserByEmail(googleUser.getEmail())) { // user가 DB에 있다면, 로그인 진행
                     // 유저 정보 조회
                     GetUserRes getUserRes = userService.getUserByEmail(googleUser.getEmail());
 
@@ -62,13 +63,11 @@ public class OAuthService {
                     String jwtToken = jwtService.createJwt(getUserRes.getId());
 
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
-                    GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, getUserRes.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
-                    return getSocialOAuthRes;
-                }else { // user가 DB에 없다면, 회원가입 진행
+                    return new GetSocialOAuthRes(jwtToken, getUserRes.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
+                } else { // user가 DB에 없다면, 회원가입 진행
                     // 유저 정보 저장
                     PostUserRes postUserRes = userService.createOAuthUser(googleUser.toEntity());
-                    GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(postUserRes.getJwt(), postUserRes.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
-                    return getSocialOAuthRes;
+                    return new GetSocialOAuthRes(postUserRes.getJwt(), postUserRes.getId(), oAuthToken.getAccess_token(), oAuthToken.getToken_type());
                 }
             }
             default: {
