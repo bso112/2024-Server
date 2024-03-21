@@ -34,11 +34,14 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false, HttpStatus.UNAUTHORIZED.value(), "JWT를 입력해주세요."),
     INVALID_JWT(false, HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false, HttpStatus.FORBIDDEN.value(), "권한이 없는 유저의 접근입니다."),
-    NOT_FIND_USER(false, HttpStatus.NOT_FOUND.value(), "일치하는 유저가 없습니다."),
-    DORMANCY_USER(false, HttpStatus.NOT_FOUND.value(), "휴면계정입니다."),
-    BLOCKED_USER(false, HttpStatus.NOT_FOUND.value(), "차단된 계정입니다."),
+    NOT_EXIST_USER(false, HttpStatus.NOT_FOUND.value(), "일치하는 유저가 없습니다."),
+    DORMANCY_USER(false, HttpStatus.UNAUTHORIZED.value(), "휴면계정입니다."),
+    BLOCKED_USER(false, HttpStatus.UNAUTHORIZED.value(), "차단된 계정입니다."),
     INVALID_OAUTH_TYPE(false, HttpStatus.BAD_REQUEST.value(), "알 수 없는 소셜 로그인 형식입니다."),
-
+    NOT_EXIST_ORDER(false, HttpStatus.NOT_FOUND.value(), "존재하지 않는 주문입니다."),
+    NOT_EXIST_PRODUCT(false, HttpStatus.NOT_FOUND.value(), "존재하지 않는 상품입니다."),
+    VALIDATION_FAILED(false, HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다"),
+    INVALID_PRICE(false, HttpStatus.BAD_REQUEST.value(), "상품 가격이 일치하지 않습니다"),
 
     /**
      * 500 :  Database, Server 오류
@@ -48,11 +51,12 @@ public enum BaseResponseStatus {
     PASSWORD_ENCRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "비밀번호 복호화에 실패하였습니다."),
 
+    CANCEL_FAIL_PAYMENT(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "결제 취소 실패"),
 
     MODIFY_FAIL_USERNAME(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "유저네임 수정 실패"),
     DELETE_FAIL_USERNAME(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "유저 삭제 실패"),
     MODIFY_FAIL_MEMO(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "메모 수정 실패"),
-
+    GET_FAIL_PORTONE_ACCESS_TOKEN(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 엑세스토큰을 받아오지 못했습니다"),
     UNEXPECTED_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "예상치 못한 에러가 발생했습니다.");
 
 

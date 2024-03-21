@@ -60,13 +60,13 @@ public class UserService {
 
     public void modifyUserName(Long userId, PatchUserReq patchUserReq) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
+                .orElseThrow(() -> new BaseException(NOT_EXIST_USER));
         user.updateName(patchUserReq.getName());
     }
 
     public void deleteUser(Long userId) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
+                .orElseThrow(() -> new BaseException(NOT_EXIST_USER));
         user.deleteUser();
     }
 
@@ -88,7 +88,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public GetUserRes getUser(Long userId) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
+                .orElseThrow(() -> new BaseException(NOT_EXIST_USER));
         return new GetUserRes(user);
     }
 
@@ -100,7 +100,7 @@ public class UserService {
 
     public PostLoginRes logIn(PostLoginReq postLoginReq) {
         User user = userRepository.findByEmailAndState(postLoginReq.getEmail(), ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
+                .orElseThrow(() -> new BaseException(NOT_EXIST_USER));
 
         switch (user.getUserState()){
             case Dormancy:
@@ -127,7 +127,7 @@ public class UserService {
     }
 
     public GetUserRes getUserByEmail(String email) {
-        User user = userRepository.findByEmailAndState(email, ACTIVE).orElseThrow(() -> new BaseException(NOT_FIND_USER));
+        User user = userRepository.findByEmailAndState(email, ACTIVE).orElseThrow(() -> new BaseException(NOT_EXIST_USER));
         return new GetUserRes(user);
     }
 }

@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentRes {
+public class GetPortOneAccessTokenReq {
 
+    private String secret;
+    private String apiKey;
 }
