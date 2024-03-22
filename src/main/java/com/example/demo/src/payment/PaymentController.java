@@ -21,7 +21,7 @@ public class PaymentController {
 
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<String> validatePayment(@Valid @ModelAttribute PaymentReq paymentRes, BindingResult bindingResult) {
+    public BaseResponse<String> tryPayment(@Valid @ModelAttribute PaymentReq paymentRes, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("error : " + bindingResult.getFieldErrors());
             return new BaseResponse<>(BaseResponseStatus.VALIDATION_FAILED);

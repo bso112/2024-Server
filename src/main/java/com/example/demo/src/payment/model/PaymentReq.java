@@ -2,6 +2,7 @@ package com.example.demo.src.payment.model;
 
 import com.example.demo.common.Constant;
 import com.example.demo.src.payment.entity.Payment;
+import com.example.demo.src.payment.entity.PaymentHistory;
 import com.example.demo.src.payment.entity.PaymentMethod;
 import com.example.demo.src.payment.entity.PaymentStatus;
 import com.example.demo.src.user.entity.User;
@@ -32,16 +33,27 @@ public class PaymentReq {
     @NotNull
     private PaymentMethod paymentMethod;
 
-    public Payment toEntity(PaymentMethod paymentMethod) {
+    public Payment toEntity(PaymentStatus paymentStatus) {
         return Payment.builder()
                 .userId(userId)
                 .productId(productId)
                 .orderId(orderId)
                 .amount(price)
                 .paymentMethod(paymentMethod)
-                .paymentStatus(PaymentStatus.Normal)
+                .paymentStatus(paymentStatus)
                 .requestAt(new Date())
                 .approvedAt(new Date())
+                .build();
+    }
+
+    public PaymentHistory toHistory(){
+        return PaymentHistory.builder()
+                .userId(userId)
+                .productId(productId)
+                .orderId(orderId)
+                .amount(price)
+                .paymentMethod(paymentMethod)
+                .requestAt(new Date())
                 .build();
     }
 }

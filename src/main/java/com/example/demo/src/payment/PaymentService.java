@@ -1,6 +1,7 @@
 package com.example.demo.src.payment;
 
 import com.example.demo.common.exceptions.BaseException;
+import com.example.demo.src.payment.entity.PaymentStatus;
 import com.example.demo.src.payment.model.CancelPaymentReq;
 import com.example.demo.src.payment.model.CancelPaymentRes;
 import com.example.demo.src.product.ProductRepository;
@@ -19,7 +20,6 @@ import javax.transaction.Transactional;
 
 import static com.example.demo.common.response.BaseResponseStatus.*;
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class PaymentService {
@@ -30,8 +30,18 @@ public class PaymentService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
+    private final PaymentHistoryRepository paymentHistoryRepository;
 
     public void savePayment(PaymentReq paymentReq) {
+        try {
+            trySavePayment(paymentReq);
+        } finally {
+            paymentHistoryRepository.save(paymentReq.toHistory());
+        }
+    }
+
+    @Transactional
+    private void trySavePayment(PaymentReq paymentReq) {
         try {
             //TODO 이거 혹시 각 api 가 동기적으로 동작하나?
             if (!orderRepository.existsById(paymentReq.getOrderId())) {
@@ -46,9 +56,10 @@ public class PaymentService {
                 throw new BaseException(INVALID_PRICE);
             }
 
-            paymentRepository.save(paymentReq.toEntity(paymentReq.getPaymentMethod()));
+            paymentRepository.save(paymentReq.toEntity(PaymentStatus.Normal));
 
         } catch (Exception e) {
+            //결제 취소처리
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Content-Type", "application/json");
             httpHeaders.add("Authorization", portOneTokenRepository.getToken());
