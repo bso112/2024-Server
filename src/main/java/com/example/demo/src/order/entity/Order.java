@@ -12,6 +12,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 @Entity // 필수, Class 를 Database Table화 해주는 것이다
+@Table(name = "ORDERS")
 public class Order extends BaseEntity {
 
     @Id // PK를 의미하는 어노테이션

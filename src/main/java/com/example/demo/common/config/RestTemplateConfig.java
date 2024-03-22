@@ -1,5 +1,6 @@
 package com.example.demo.common.config;
 
+import com.example.demo.common.intercepter.RestTemplateLoggingRequestInterceptor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,16 +9,20 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class RestTemplateConfig {
     //HTTP get,post 요청을 날릴때 일정한 형식에 맞춰주는 template
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-        return restTemplateBuilder
-                .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
-                .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
-                .build();
+        String profile = System.getProperty("spring.profiles.active");
+        restTemplateBuilder = restTemplateBuilder.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        if (profile.equals("dev")) {
+            restTemplateBuilder = restTemplateBuilder
+                    .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
+                    .additionalInterceptors(new RestTemplateLoggingRequestInterceptor());
+        }
+        return restTemplateBuilder.build();
     }
 }

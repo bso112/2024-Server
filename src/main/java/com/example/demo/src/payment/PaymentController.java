@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-    @RequestMapping("/payment")
+@RequestMapping("/payment")
 public class PaymentController {
 
     private final PaymentService paymentService;

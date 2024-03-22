@@ -7,6 +7,8 @@ import com.example.demo.src.payment.model.GetPortOneAccessTokenRes;
 import com.example.demo.src.payment.model.PortOneAccessToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,16 +16,18 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PortOneService {
     private final RestTemplate restTemplate;
-    @Value("${apikey.portone.secret}")
+    @Value("${apiConfig.portone.secret}")
     private String portOneSecret;
-    @Value("${apikey.portone.apikey}")
+    @Value("${apiConfig.portone.apikey}")
     private String portOneApikey;
 
     public PortOneAccessToken getAccessToken() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Type", "application/json");
         GetPortOneAccessTokenReq req = new GetPortOneAccessTokenReq(portOneSecret, portOneApikey);
-        GetPortOneAccessTokenRes res = restTemplate.postForObject("https://api.iamport.kr/users/getToken", req, GetPortOneAccessTokenRes.class);
-        if (res != null && res.getPortOneAccessToken() != null) {
-            return res.getPortOneAccessToken();
+        GetPortOneAccessTokenRes res = restTemplate.postForObject("https://api.iamport.kr/users/getToken", new HttpEntity<>(req, httpHeaders), GetPortOneAccessTokenRes.class);
+        if (res != null && res.getResponse() != null) {
+            return res.getResponse();
         }
         throw new BaseException(BaseResponseStatus.GET_FAIL_PORTONE_ACCESS_TOKEN);
     }
