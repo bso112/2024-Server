@@ -19,6 +19,9 @@ public class Payment extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String impUid;
+
+    @Column(nullable = false)
     private Long orderId;
 
     @Column(nullable = false)
