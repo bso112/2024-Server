@@ -43,7 +43,6 @@ public class PaymentService {
     @Transactional
     private void trySavePayment(PaymentReq paymentReq) {
         try {
-            //TODO 이거 혹시 각 api 가 동기적으로 동작하나?
             if (!orderRepository.existsById(paymentReq.getOrderId())) {
                 throw new BaseException(NOT_EXIST_ORDER);
             }
