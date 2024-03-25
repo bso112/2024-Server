@@ -1,11 +1,9 @@
 package com.example.demo.src.payment.model;
 
-import com.example.demo.common.Constant;
 import com.example.demo.src.payment.entity.Payment;
 import com.example.demo.src.payment.entity.PaymentHistory;
 import com.example.demo.src.payment.entity.PaymentMethod;
 import com.example.demo.src.payment.entity.PaymentStatus;
-import com.example.demo.src.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +30,12 @@ public class PaymentReq {
     private String impUid;
     @NotNull
     private PaymentMethod paymentMethod;
+    @NotNull
+    private String cardNumber;
+    @NotNull
+    private String expiry;
+    @NotNull
+    private String productName;
 
     public Payment toEntity(PaymentStatus paymentStatus) {
         return Payment.builder()
@@ -39,7 +43,10 @@ public class PaymentReq {
                 .productId(productId)
                 .orderId(orderId)
                 .amount(price)
+                .productName(productName)
                 .paymentMethod(paymentMethod)
+                .cardNumber(cardNumber)
+                .expiry(expiry)
                 .paymentStatus(paymentStatus)
                 .requestAt(new Date())
                 .approvedAt(new Date())

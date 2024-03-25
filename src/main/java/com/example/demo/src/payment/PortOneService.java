@@ -1,9 +1,12 @@
 package com.example.demo.src.payment;
 
 import com.example.demo.common.exceptions.BaseException;
-import com.example.demo.common.response.BaseResponse;
 import com.example.demo.common.response.BaseResponseStatus;
 import com.example.demo.src.payment.model.*;
+import com.example.demo.src.payment.model.reqest.GetPaymentsReq;
+import com.example.demo.src.payment.model.reqest.GetPortOneAccessTokenReq;
+import com.example.demo.src.payment.model.response.GetPaymentsRes;
+import com.example.demo.src.payment.model.response.GetPortOneAccessTokenRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

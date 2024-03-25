@@ -5,6 +5,7 @@ import com.example.demo.src.payment.PortOneService;
 import com.example.demo.src.payment.PortOneTokenRepository;
 import com.example.demo.src.payment.entity.Payment;
 import com.example.demo.src.payment.model.PaymentAnnotation;
+import com.example.demo.src.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class PaymentScheduler {
-
     private final PaymentRepository paymentRepository;
     private final PortOneTokenRepository tokenRepository;
     private final PortOneService portOneService;
@@ -34,6 +34,7 @@ public class PaymentScheduler {
             log.error("유효하지 않은 결제정보: {}", invalidPayments);
         }
     }
+
 
     /**
      * 하루 전 발생한 결제 정보를 포트원 서버의 결제 정보와 비교해서 검증한다.

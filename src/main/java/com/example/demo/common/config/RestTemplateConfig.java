@@ -1,6 +1,8 @@
 package com.example.demo.common.config;
 
+import com.example.demo.common.intercepter.PortOneHttpHeaderInterceptor;
 import com.example.demo.common.intercepter.RestTemplateLoggingRequestInterceptor;
+import com.example.demo.src.payment.PortOneTokenRepository;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +22,7 @@ public class RestTemplateConfig {
         restTemplateBuilder = restTemplateBuilder.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8));
         if (profile.equals("dev")) {
             restTemplateBuilder = restTemplateBuilder
-                    .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
-                    .additionalInterceptors(new RestTemplateLoggingRequestInterceptor());
+                    .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
         }
         return restTemplateBuilder.build();
     }

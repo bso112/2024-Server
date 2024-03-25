@@ -1,4 +1,4 @@
-package com.example.demo.src.payment.model;
+package com.example.demo.src.payment.model.reqest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

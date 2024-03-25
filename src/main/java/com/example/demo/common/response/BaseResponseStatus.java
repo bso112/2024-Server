@@ -58,7 +58,11 @@ public enum BaseResponseStatus {
     MODIFY_FAIL_MEMO(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "메모 수정 실패"),
     GET_FAIL_PORTONE_ACCESS_TOKEN(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 엑세스토큰을 받아오지 못했습니다"),
     UNEXPECTED_ERROR(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "예상치 못한 에러가 발생했습니다."),
-    GET_FAIL_PORTONE_PAYMENTS(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "결제 정보를 받아오지 못했습니다");
+    GET_FAIL_PORTONE_PAYMENTS(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "결제 정보를 받아오지 못했습니다"),
+    GET_FAIL_PORTONE_BILLING_KEY(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 빌링키를 받아오지 못했습니다"),
+    SCHEDULE_FAIL_PAYMENT(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "정기결제 등록에 실패했습니다"),
+    GET_FAIL_PORTONE_PAYMENT(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "포트원 서버에서 결제정보를 받아오지 못했습니다");
+
 
 
     private final boolean isSuccess;

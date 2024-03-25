@@ -1,4 +1,4 @@
-package com.example.demo.src.payment.model;
+package com.example.demo.src.payment.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CancelPaymentRes {
+public class SchedulePaymentRes {
     private int code;
     private String message;
 

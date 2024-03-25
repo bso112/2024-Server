@@ -1,7 +1,6 @@
 package com.example.demo.src.payment.entity;
 
 import com.example.demo.common.entity.BaseEntity;
-import com.example.demo.src.payment.PaymentService;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +30,9 @@ public class Payment extends BaseEntity {
     private Long productId;
 
     @Column(nullable = false)
+    private String productName;
+
+    @Column(nullable = false)
     private int amount;
 
     @Enumerated(EnumType.STRING)
@@ -47,10 +49,22 @@ public class Payment extends BaseEntity {
     @Column(nullable = false)
     private Date approvedAt;
 
+    //카드번호
+    @Column(nullable = false)
+    private String cardNumber;
+
+    //카드 유효기간
+    @Column(nullable = false)
+    private String expiry;
+
     @Builder
-    public Payment(Long id, Long orderId, Long userId, Long productId, int amount, PaymentMethod paymentMethod, PaymentStatus paymentStatus, Date requestAt, Date approvedAt) {
+    public Payment(Long id, Long orderId, Long userId, Long productId, String productName, int amount,
+                   PaymentMethod paymentMethod, PaymentStatus paymentStatus, Date requestAt, Date approvedAt,
+                   String cardNumber, String expiry
+    ) {
         this.id = id;
         this.orderId = orderId;
+        this.productName = productName;
         this.userId = userId;
         this.productId = productId;
         this.amount = amount;
@@ -58,6 +72,8 @@ public class Payment extends BaseEntity {
         this.status = paymentStatus;
         this.requestAt = requestAt;
         this.approvedAt = approvedAt;
+        this.cardNumber = cardNumber;
+        this.expiry = expiry;
     }
 
 }

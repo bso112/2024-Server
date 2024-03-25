@@ -1,4 +1,4 @@
-package com.example.demo.src.payment.model;
+package com.example.demo.src.payment.model.reqest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPortOneAccessTokenRes {
-    private int code;
-    private String message;
-    private PortOneAccessToken response;
+public class GetPortOneBillingKeyReq {
 
+    @JsonProperty("card_number")
+    private String cardNumber;
+    private String expiry;
 }
