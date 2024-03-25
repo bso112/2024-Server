@@ -6,7 +6,6 @@ import com.example.demo.src.payment.PortOneTokenRepository;
 import com.example.demo.src.payment.entity.Payment;
 import com.example.demo.src.payment.model.PaymentAnnotation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +59,7 @@ public class PaymentScheduler {
                 Slice<Payment> paymentSlice = paymentRepository.findAllByApprovedAtBetween(fromDate, toDate, pageable);
 
                 hasNextPayment = paymentSlice.hasNext();
+                currentPage += 1;
 
                 List<Payment> payments = paymentSlice.toList();
                 List<String> paymentImpIds = payments.stream().map(Payment::getImpUid).collect(Collectors.toList());
